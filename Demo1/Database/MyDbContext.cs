@@ -11,5 +11,6 @@ namespace Demo1.Database
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options) {}
 
         public DbSet<Person> People { get; set; }
+        public DbSet<PersonAddress> PersonAddress { get; set; }
     }
 }
