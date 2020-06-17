@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Demo1.Database;
-using Demo1.SchoolDBModels;
+//using Demo1.SchoolDBModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +30,7 @@ namespace Demo1
             services.AddControllers();
 
             services.AddDbContext<MyDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MyDbConnection")));
-            services.AddDbContext<SchoolDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SchoolDBConnection")));
+            //services.AddDbContext<SchoolDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SchoolDBConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

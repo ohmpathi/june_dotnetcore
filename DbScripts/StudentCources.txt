@@ -1,0 +1,48 @@
+create table Courses
+(
+     CourseID int identity primary key,
+     CourseName nvarchar(50)
+)
+go
+
+create table Students
+(
+     StudentID int identity primary key,
+     StudentName nvarchar(50)
+)
+go
+
+create table StudentCourses
+(
+     StudentID int not null foreign key references Students(StudentID),
+     CourseID int not null foreign key references Courses(CourseID)
+     primary key (StudentID, CourseID)
+)
+go
+
+insert into Courses(Name) values ('C#')
+insert into Courses(Name) values ('ASP.NET')
+insert into Courses(Name) values ('SQL Server')
+insert into Courses(Name) values ('WCF')
+go
+insert into Students('Name') values ('Mike')
+insert into Students('Name') values ('John')
+go
+insert into StudentCourses values (1, 1)
+insert into StudentCourses values (1, 2)
+insert into StudentCourses values (2, 1)
+insert into StudentCourses values (2, 2)
+insert into StudentCourses values (2, 3)
+go
+
+
+
+
+
+drop table __EFMigrationsHistory;
+drop table StudentCourses;
+drop table Courses;
+drop table Students;
+
+drop table PeopleMaster;
+drop table Projects;

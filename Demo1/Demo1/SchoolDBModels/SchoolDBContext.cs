@@ -6,6 +6,9 @@ namespace Demo1.SchoolDBModels
 {
     public partial class SchoolDBContext : DbContext
     {
+        public SchoolDBContext()
+        {
+        }
 
         public SchoolDBContext(DbContextOptions<SchoolDBContext> options)
             : base(options)
@@ -14,6 +17,15 @@ namespace Demo1.SchoolDBModels
 
         public virtual DbSet<Department> Department { get; set; }
         public virtual DbSet<Employee> Employee { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=(LocalDB)\\MSSQLLocalDB; Database=SchoolDB; Integrated Security=true");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

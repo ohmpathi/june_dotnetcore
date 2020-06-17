@@ -23,9 +23,11 @@ namespace Demo1.Database
         [Column("DateOfBirth")]
         public DateTime? DOB { get; set; }
 
-        public int addressId { get; set; }
+        //public int addressId { get; set; }
 
-        [ForeignKey("addressId")]
-        public virtual PersonAddress personAddress { get; set; }
+        //[ForeignKey("addressId")]
+        //public virtual PersonAddress personAddress { get; set; }
+
+        public Project Project { get; set; }
     }
 }
