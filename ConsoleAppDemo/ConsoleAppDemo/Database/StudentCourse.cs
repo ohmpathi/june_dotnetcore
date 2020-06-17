@@ -9,11 +9,9 @@ namespace ConsoleAppDemo.Database
     public class StudentCourse
     {
         public int StudentId { get; set; }
-        //[ForeignKey("Student")]
-        public Student Student { get; set; }
+        public virtual Student Student { get; set; }
 
         public int CourseId { get; set; }
-        //[ForeignKey("Course")]
-        public Course Course { get; set; }
+        public virtual Course Course { get; set; }
     }
 }

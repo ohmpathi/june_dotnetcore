@@ -1,0 +1,24 @@
+{
+  "Locations": [
+    {
+      "Id": 1,
+      "City": "Hyderabad",
+      "Country": "India"
+    },
+    {
+      "Id": 2,
+      "City": "New York",
+      "Country": "USA"
+    },
+    {
+      "Id": 3,
+      "City": "Bengaluru",
+      "Country": "India"
+    },
+    {
+      "Id": 4,
+      "City": "Chennai",
+      "Country": "India"
+    }
+  ]
+}

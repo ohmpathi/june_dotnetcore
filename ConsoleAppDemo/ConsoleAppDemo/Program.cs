@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ConsoleAppDemo.Database;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ConsoleAppDemo
 {
@@ -11,31 +15,29 @@ namespace ConsoleAppDemo
         {
             MyDbContext dbContext = new MyDbContext();
 
-            var students = dbContext.Students;
-                //.Include("StudentCourses")
-                //.Include("StudentCourses.Course");
+            //dbContext.Courses.Add(new Course { Name = "EF Core" });
+            //dbContext.SaveChanges();
 
-            foreach (var s in students)
+            //var id = dbContext.Courses.Find(6);
+            //id.Name = "EF Core 3.1";
+            //dbContext.SaveChanges();
+
+            try
             {
-                foreach (var sc in s.StudentCourses)
+                using (var trans = dbContext.Database.BeginTransaction())
                 {
-                    Console.WriteLine(s.Name + "\t: " + sc.Course.Name + ", ");
+                    dbContext.Students.Add(new Student { Name = "XYZ 2" });
+                    dbContext.SaveChanges();
+
+                    var courses = dbContext.Courses.FromSqlRaw("select Id, name, isAvailable, createdDate, updatedDate from Courses").ToList();
+
+                    trans.Commit();
                 }
             }
-
-
-            //var data = from student in dbContext.Students
-            //           from sc in student.StudentCourses
-            //           select new
-            //           {
-            //               student.Name,
-            //               Course = sc.Course.Name
-            //           };
-
-            //foreach(var c in data)
-            //{
-            //    Console.WriteLine(c.Name + "\t: " + c.Course);
-            //}
+            catch
+            {
+                Console.WriteLine("Transaction failed");
+            }
         }
     }
 }

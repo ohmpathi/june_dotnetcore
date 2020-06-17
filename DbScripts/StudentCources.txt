@@ -20,6 +20,9 @@ create table StudentCourses
 )
 go
 
+
+
+
 insert into Courses(Name) values ('C#')
 insert into Courses(Name) values ('ASP.NET')
 insert into Courses(Name) values ('SQL Server')
@@ -46,3 +49,6 @@ drop table Students;
 
 drop table PeopleMaster;
 drop table Projects;
+
+
+
