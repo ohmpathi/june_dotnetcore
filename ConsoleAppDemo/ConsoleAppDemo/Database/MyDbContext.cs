@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -38,32 +39,39 @@ namespace ConsoleAppDemo.Database
             modelBuilder.Entity<Location>().HasData(locations);
 
 
-            modelBuilder.Entity<Course>().Property(typeof(int), "IsAvailable");
-            modelBuilder.Entity<Course>().Property(typeof(DateTime), "CreatedDate");
-            modelBuilder.Entity<Course>().Property(typeof(DateTime?), "UpdatedDate");
+            //modelBuilder.Entity<Course>().Property(typeof(int), "IsAvailable");
+            //modelBuilder.Entity<Course>().Property(typeof(DateTime), "CreatedDate");
+            //modelBuilder.Entity<Course>().Property(typeof(DateTime?), "UpdatedDate");
 
-            modelBuilder.Entity<Course>().HasQueryFilter(e => EF.Property<int>(e, "IsAvailable") == 1);
+            //modelBuilder.Entity<Course>().HasQueryFilter(e => EF.Property<int>(e, "IsAvailable") == 1);
+
+            modelBuilder.Entity<Course>()
+                .Property(e => e.Status)
+                //.HasConversion(
+                //    v => v.ToString(),
+                //    v => (CourseStatus)Enum.Parse(typeof(CourseStatus), v));
+                .HasConversion(new EnumToStringConverter<CourseStatus>());
         }
 
-        public override int SaveChanges()
-        {
-            foreach(var entry in ChangeTracker.Entries())
-            {
-                if(entry.Entity is Course)
-                {
-                    if(entry.State == EntityState.Added)
-                    {
-                        entry.Property("CreatedDate").CurrentValue = DateTime.Now;
-                    }
-                    else if(entry.State == EntityState.Modified)
-                    {
-                        entry.Property("UpdatedDate").CurrentValue = DateTime.Now;
-                    }
-                }
-            }
+        //public override int SaveChanges()
+        //{
+        //    foreach(var entry in ChangeTracker.Entries())
+        //    {
+        //        if(entry.Entity is Course)
+        //        {
+        //            if(entry.State == EntityState.Added)
+        //            {
+        //                entry.Property("CreatedDate").CurrentValue = DateTime.Now;
+        //            }
+        //            else if(entry.State == EntityState.Modified)
+        //            {
+        //                entry.Property("UpdatedDate").CurrentValue = DateTime.Now;
+        //            }
+        //        }
+        //    }
 
-            return base.SaveChanges();
-        }
+        //    return base.SaveChanges();
+        //}
 
         //public DbSet<Person> Persons { get; set; }
         //public DbSet<PersonAddress> PersonAddresses { get; set; }

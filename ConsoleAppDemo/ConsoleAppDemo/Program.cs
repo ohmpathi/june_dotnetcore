@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using ConsoleAppDemo.Database;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -15,29 +16,34 @@ namespace ConsoleAppDemo
         {
             MyDbContext dbContext = new MyDbContext();
 
-            //dbContext.Courses.Add(new Course { Name = "EF Core" });
-            //dbContext.SaveChanges();
+            //var data = dbContext.Students.Include("StudentCourses").ToList();
 
-            //var id = dbContext.Courses.Find(6);
-            //id.Name = "EF Core 3.1";
-            //dbContext.SaveChanges();
+            var data = from s in dbContext.Students
+                       join sc in dbContext.StudentCourse on s.Id equals sc.StudentId into scGroup
+                       from scg in scGroup.DefaultIfEmpty()
+                       join c in dbContext.Courses on scg.CourseId equals c.Id into scGroup2
+                       from scg2 in scGroup2.DefaultIfEmpty()
+                       select new
+                       {
+                           StudentName = s.Name,
+                           Course = scg2.Name
+                       };
 
-            try
+            var data2 = from s in dbContext.Students
+                        from sc in dbContext.StudentCourse.Where(sc => s.Id == sc.StudentId).DefaultIfEmpty()
+                        from c in dbContext.Courses.Where(c => sc.CourseId == c.Id).DefaultIfEmpty()
+                        select new
+                        {
+                            StudentName = s.Name,
+                            Course = c.Name
+                        };
+
+
+            foreach (var sc in data)
             {
-                using (var trans = dbContext.Database.BeginTransaction())
-                {
-                    dbContext.Students.Add(new Student { Name = "XYZ 2" });
-                    dbContext.SaveChanges();
-
-                    var courses = dbContext.Courses.FromSqlRaw("select Id, name, isAvailable, createdDate, updatedDate from Courses").ToList();
-
-                    trans.Commit();
-                }
+                Console.WriteLine(sc.StudentName + "\t" + sc.Course);
             }
-            catch
-            {
-                Console.WriteLine("Transaction failed");
-            }
+
         }
     }
 }
