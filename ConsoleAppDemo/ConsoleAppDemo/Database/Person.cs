@@ -17,10 +17,8 @@ namespace ConsoleAppDemo.Database
         [Required]
         public string Name { get; set; }
 
-        public int addressId { get; set; }
-
-        [ForeignKey("addressId")]
         public virtual PersonAddress PersonAddress { get; set; }
+        //public virtual List<PersonAddress> DeliveryAddresses { get; set; }
 
     }
 }

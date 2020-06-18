@@ -14,6 +14,10 @@ namespace ConsoleAppDemo
     {
         static void Main(string[] args)
         {
+        }
+        
+        internal void LeftJoins()
+        {
             MyDbContext dbContext = new MyDbContext();
 
             //var data = dbContext.Students.Include("StudentCourses").ToList();
