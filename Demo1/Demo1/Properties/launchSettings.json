@@ -23,7 +23,16 @@
       "launchUrl": "people",
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Staging"
+      }
+    },
+    "Custom Profile": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "people",
+      "applicationUrl": "http://localhost:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
       }
     }
   }
