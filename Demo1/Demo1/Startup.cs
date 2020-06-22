@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Demo1.Database;
@@ -7,10 +8,12 @@ using Demo1.SchoolDBModels;
 //using Demo1.SchoolDBModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -53,6 +56,48 @@ namespace Demo1
             }
 
             app.UseRouting();
+
+
+            //app.UseDefaultFiles();
+            /////// default.htm
+            /////// default.html
+            /////// index.htm
+            /////// index.html
+            //app.UseDefaultFiles(new DefaultFilesOptions
+            //{
+            //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "MyStaticFiles")),
+            //    RequestPath = "/StaticFiles",
+            //    DefaultFileNames = new List<string> { "home.html" }
+            //});
+
+            //app.UseStaticFiles();
+            //app.UseStaticFiles(new StaticFileOptions
+            //{
+            //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "MyStaticFiles")),
+            //    RequestPath = "/StaticFiles"
+            //});
+
+            //app.UseDirectoryBrowser();
+            //app.UseDirectoryBrowser(new DirectoryBrowserOptions
+            //{
+            //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "MyStaticFiles")),
+            //    RequestPath = "/StaticFiles"
+            //});
+
+
+            app.UseFileServer(new FileServerOptions
+            {
+                EnableDirectoryBrowsing = true
+            });
+
+            var options = new FileServerOptions
+            {
+                EnableDirectoryBrowsing = true,
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "MyStaticFiles")),
+                RequestPath = "/StaticFiles"
+            };
+            options.DefaultFilesOptions.DefaultFileNames = new List<string> { "home.html" };
+            app.UseFileServer(options);
 
             app.UseAuthorization();
 

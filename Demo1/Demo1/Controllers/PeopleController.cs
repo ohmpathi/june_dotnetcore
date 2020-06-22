@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Demo1.Controllers
 {
@@ -16,9 +17,12 @@ namespace Demo1.Controllers
     public class PeopleController : ControllerBase
     {
         private MyDbContext dbContext { get; set; }
-        public PeopleController(MyDbContext dbContext)
+        private IConfiguration Configuration { get; set; }
+
+        public PeopleController(MyDbContext dbContext, IConfiguration Configuration)
         {
             this.dbContext = dbContext;
+            this.Configuration = Configuration;
         }
 
 
@@ -31,11 +35,13 @@ namespace Demo1.Controllers
             //    People = p.People.ToList()
             //}));
 
-            return Ok(dbContext.People.Select(p => new
-            {
-                p.Name,
-                ProjectName = p.Project.Name
-            }));
+            //return Ok(dbContext.People.Select(p => new
+            //{
+            //    p.Name,
+            //    ProjectName = p.Project.Name
+            //}));
+
+            return Ok(Configuration.GetSection("ConfigProperty").Value);
         }
 
         [HttpGet]
