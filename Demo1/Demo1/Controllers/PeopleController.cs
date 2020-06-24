@@ -29,11 +29,11 @@ namespace Demo1.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            //return Ok(dbContext.Projects.Select(p => new
-            //{
-            //    p.Name,
-            //    People = p.People.ToList()
-            //}));
+            return Ok(new
+            {
+                Name = "Project name",
+                People = "Assigned people"
+            });
 
             //return Ok(dbContext.People.Select(p => new
             //{
@@ -41,7 +41,7 @@ namespace Demo1.Controllers
             //    ProjectName = p.Project.Name
             //}));
 
-            return Ok(Configuration.GetSection("ConfigProperty").Value);
+            //return Ok(Configuration.GetSection("ConfigProperty").Value);
         }
 
         [HttpGet]

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Demo1.Database;
 using Demo1.SchoolDBModels;
-//using Demo1.SchoolDBModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -98,6 +97,58 @@ namespace Demo1
             };
             options.DefaultFilesOptions.DefaultFileNames = new List<string> { "home.html" };
             app.UseFileServer(options);
+
+
+            //app.Use(async (context, next) =>
+            //{
+            //    await context.Response.WriteAsync("Hello World From 1st Middleware!" + Environment.NewLine);
+            //    await next();
+            //});
+
+            //app.Run(async (context) =>
+            //{
+            //    await context.Response.WriteAsync("Hello World From 2nd Middleware" + Environment.NewLine);
+            //});
+
+
+            app.UseResponseWrapperMiddleware();
+            //app.UseMiddleware<ResponseWrapperMiddleware>();
+
+
+            app.Map("/api/employee", (app) =>
+            {
+                app.Run(async (context) =>
+                {
+                    await context.Response.WriteAsync("response for person route");
+                });
+            });
+
+            app.MapWhen((httpContext) =>
+            {
+                var header = httpContext.Request.Headers["Authorization"];
+                
+                if (string.IsNullOrEmpty(header)) return true;
+
+                return header != "mysecret";
+
+            }, (app) =>
+            {
+                app.Run(async (context) =>
+                {
+                    context.Response.StatusCode = 401;
+                    await context.Response.WriteAsync("You are not authorized to view this content");
+                });
+            });
+
+            app.Map("/level1", level1App => {
+                level1App.Map("/level2a", level2AApp => {
+                    // "/level1/level2a" processing
+                });
+                level1App.Map("/level2b", level2BApp => {
+                    // "/level1/level2b" processing
+                });
+            });
+
 
             app.UseAuthorization();
 
