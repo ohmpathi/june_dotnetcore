@@ -16,24 +16,35 @@ namespace Demo1.Controllers
     [ApiController]
     public class PeopleController : ControllerBase
     {
-        private MyDbContext dbContext { get; set; }
-        private IConfiguration Configuration { get; set; }
+        private MyDbContext dbContext { get; }
+        private IConfiguration Configuration { get; }
+        private IService myService { get; }
+        private MySecondService mySecondService { get; }
 
-        public PeopleController(MyDbContext dbContext, IConfiguration Configuration)
+        public PeopleController(MyDbContext dbContext,
+            IConfiguration Configuration,
+            IService myService,
+            MySecondService mySecondService)
         {
             this.dbContext = dbContext;
             this.Configuration = Configuration;
+            this.myService = myService;
+            this.mySecondService= mySecondService;
         }
 
 
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(new
-            {
-                Name = "Project name",
-                People = "Assigned people"
-            });
+            return Ok(myService.ServiceId + Environment.NewLine
+                + mySecondService.FirstServiceId + Environment.NewLine
+                + myService.GetType().Name);
+
+            //return Ok(new
+            //{
+            //    Name = "Project name",
+            //    People = "Assigned people"
+            //});
 
             //return Ok(dbContext.People.Select(p => new
             //{

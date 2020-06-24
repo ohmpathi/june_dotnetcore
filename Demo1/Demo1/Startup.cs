@@ -40,6 +40,17 @@ namespace Demo1
                 options.UseLoggerFactory(loggerFactory).EnableSensitiveDataLogging();
                 options.UseSqlServer(Configuration.GetConnectionString("SchoolDBConnection"));
             });
+
+            //services.AddSingleton<MyService>();
+            //services.AddSingleton<MySecondService>();
+
+            services.AddScoped<IService, MyService>();
+            services.AddScoped<IService, MyService2>();
+            // MyService is replaced by MyService2 class
+            services.AddScoped<MySecondService>();
+
+            //services.AddTransient<MyService>();
+            //services.AddTransient<MySecondService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -107,7 +118,7 @@ namespace Demo1
             //});
 
 
-            app.UseResponseWrapperMiddleware();
+            //app.UseResponseWrapperMiddleware();
             //app.UseMiddleware<ResponseWrapperMiddleware>();
 
 
