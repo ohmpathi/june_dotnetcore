@@ -1,14 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Demo1.Database;
 using Demo1.SchoolDBModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -123,10 +119,34 @@ namespace Demo1
                 });
             });
 
+            app.Map("/level1", level1App =>
+            {
+                level1App.Map("/level2a", level2AApp =>
+                {
+                    // "/level1/level2a" processing
+                });
+                level1App.Map("/level2b", level2BApp =>
+                {
+                    // "/level1/level2b" processing
+                });
+            });
+
+            //CustomAuthorization(app);
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+        }
+
+        private static void CustomAuthorization(IApplicationBuilder app)
+        {
             app.MapWhen((httpContext) =>
             {
                 var header = httpContext.Request.Headers["Authorization"];
-                
+
                 if (string.IsNullOrEmpty(header)) return true;
 
                 return header != "mysecret";
@@ -138,23 +158,6 @@ namespace Demo1
                     context.Response.StatusCode = 401;
                     await context.Response.WriteAsync("You are not authorized to view this content");
                 });
-            });
-
-            app.Map("/level1", level1App => {
-                level1App.Map("/level2a", level2AApp => {
-                    // "/level1/level2a" processing
-                });
-                level1App.Map("/level2b", level2BApp => {
-                    // "/level1/level2b" processing
-                });
-            });
-
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
             });
         }
     }
