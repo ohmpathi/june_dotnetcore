@@ -6,26 +6,11 @@ namespace Demo1.SchoolDBModels
 {
     public partial class SchoolDBContext : DbContext
     {
-        public SchoolDBContext()
-        {
-        }
-
-        public SchoolDBContext(DbContextOptions<SchoolDBContext> options)
-            : base(options)
-        {
-        }
+        public SchoolDBContext(DbContextOptions<SchoolDBContext> options): base(options) { }
 
         public virtual DbSet<Department> Department { get; set; }
         public virtual DbSet<Employee> Employee { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=(LocalDB)\\MSSQLLocalDB; Database=SchoolDB; Integrated Security=true");
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -47,10 +32,6 @@ namespace Demo1.SchoolDBModels
                     .HasForeignKey(d => d.DepartmentId)
                     .HasConstraintName("FK__Employee__Depart__25869641");
             });
-
-            OnModelCreatingPartial(modelBuilder);
         }
-
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
