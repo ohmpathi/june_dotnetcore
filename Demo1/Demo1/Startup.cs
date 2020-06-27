@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using Demo1.BasicAuthentication;
 using Demo1.Database;
 using Demo1.SchoolDBModels;
 using Microsoft.AspNetCore.Builder;
@@ -40,6 +41,8 @@ namespace Demo1
                 options.UseLoggerFactory(loggerFactory).EnableSensitiveDataLogging();
                 options.UseSqlServer(Configuration.GetConnectionString("SchoolDBConnection"));
             });
+
+            services.AddScoped<UserService>();
 
             //services.AddSingleton<MyService>();
             //services.AddSingleton<MySecondService>();

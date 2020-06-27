@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Demo1.BasicAuthentication;
 using Demo1.Database;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Demo1.Controllers
 {
+
     [Route("[controller]")]
     [ApiController]
     public class PeopleController : ControllerBase
@@ -32,7 +34,7 @@ namespace Demo1.Controllers
             this.mySecondService= mySecondService;
         }
 
-
+        [BasicAuthentication]
         [HttpGet]
         public IActionResult Get()
         {
@@ -53,6 +55,14 @@ namespace Demo1.Controllers
             //}));
 
             //return Ok(Configuration.GetSection("ConfigProperty").Value);
+        }
+
+        [HttpGet]
+        [Route("sample")]
+        public IActionResult Get5()
+        {
+            return Ok("Public data");
+
         }
 
         [HttpGet]
