@@ -10,5 +10,6 @@ namespace WebApi.Models
         public string FirstName { get; set; }
         public string Username { get; set; }
         public string token { get; set; }
+        public string Exipres { get; set; }
     }
 }
