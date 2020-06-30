@@ -43,6 +43,7 @@ namespace WebApi.Services
                         new Claim(ClaimTypes.Name, user.Name),
                         new Claim(ClaimTypes.Role, user.Role),
                         new Claim(ClaimTypes.Email, user.Email),
+                        new Claim("City", user.City)
                     }),
                     Expires = DateTime.UtcNow.AddMinutes(50),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(keyAsBytes), SecurityAlgorithms.HmacSha256Signature)

@@ -49,17 +49,23 @@ namespace WebApi.Controllers
             return Ok();
         }
 
-        [Route("VerifyEmail/{email}")]
-        [AcceptVerbs("GET", "POST")]
-        public IActionResult VerifyEmail(string email)
+        [Route("changerole")]
+        [Authorize(Policy = "ChangeRole")]
+        [HttpPost]
+        public IActionResult ChangeUserRole(User user)
         {
-            var user = database.Users.FirstOrDefault(u => u.Email == email);
-
-            if (user != null)
-                return Ok($"Email {email} is already in use.");
-            return Ok(true);
+            var u = database.Users.SingleOrDefault(dbUser => dbUser.Email == user.Email);
+            u.Role = user.Role;
+            database.SaveChanges();
+            return Ok();
         }
 
-
+        [Route("cityinfo")]
+        [Authorize(Policy = "CityAccess")]
+        [HttpGet]
+        public IActionResult CityAccess()
+        {
+            return Ok(User.Claims.Single(c => c.Type == "City").Value);
+        }
     }
 }

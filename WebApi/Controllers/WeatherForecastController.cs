@@ -41,23 +41,8 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Route("secret")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "accesSecret")]
         public IEnumerable<WeatherForecast> Get2()
-        {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            })
-            .ToArray();
-        }
-
-        [HttpGet]
-        [Route("usersecret")]
-        [Authorize(Roles = "User,Admin")]
-        public IEnumerable<WeatherForecast> Get3()
         {
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast

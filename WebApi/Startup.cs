@@ -31,7 +31,7 @@ namespace WebApi
         {
             services.AddControllers();
 
-            services.AddDbContext<ApiDatabase>(options =>options.UseSqlServer(Configuration.GetConnectionString("ApiDatabaseConnection")));
+            services.AddDbContext<ApiDatabase>(options => options.UseSqlServer(Configuration.GetConnectionString("ApiDatabaseConnection")));
 
             services.AddScoped<UserService>();
 
@@ -43,17 +43,31 @@ namespace WebApi
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
                 .AddJwtBearer(options =>
-            {
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
-                };
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
+            services.AddAuthorization(option =>
+            {
+                option.AddPolicy("ChangeRole", policy => policy.RequireRole("Admin"));
+                option.AddPolicy("accesSecret", policy => policy.RequireRole("Admin", "user"));
+
+                option.AddPolicy("CityAccess", policy => policy.RequireAssertion(context =>
+                {
+                    var city = context.User.Claims.Single(c => c.Type == "City");
+                    return city.Value == "New York";
+                }));
+
+                //option.AddPolicy("CityAccess", policy => policy.RequireClaim("New York"));
             });
         }
 
