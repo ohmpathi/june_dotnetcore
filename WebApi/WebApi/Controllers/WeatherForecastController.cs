@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SimpleSorts;
 
 namespace WebApi.Controllers
 {
@@ -27,8 +28,26 @@ namespace WebApi.Controllers
 
         [AllowAnonymous]
         [HttpGet]
+        [Route("sort")]
+        public IActionResult GetSortedList()
+        {
+            var list = new List<int> { 5, 4, 3, 2, 1 };
+            var sortedList = new SlectionSort().Sort(list);
+            return Ok(new
+            {
+                randon = list,
+                sorted = sortedList
+            });
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
+            int x = 6;
+            int y = 0;
+            int z = x / y;
+
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
@@ -42,7 +61,7 @@ namespace WebApi.Controllers
         [HttpGet]
         [Route("secret")]
         [Authorize(Policy = "accesSecret")]
-        public IEnumerable<WeatherForecast> Get2()
+        public IEnumerable<WeatherForecast> GetSecret()
         {
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -52,6 +71,15 @@ namespace WebApi.Controllers
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpPost]
+        public IActionResult Post()
+        {
+            int x = 6;
+            int y = 0;
+            int z = x / y;
+            return Ok(z);
         }
     }
 }
