@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using WebApi.Services;
 using WebApi.WebApiDatabase;
 
@@ -33,6 +35,40 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddSwaggerGen(c =>
+            {
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+
+                // Ref: https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/1425#issuecomment-573321858
+                // Adds authenticate button to the UI
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme.",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "bearer"
+                });
+
+                // Sends the auth token with requests
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        }, new List<string>()
+                    }
+                });
+            });
 
             services.AddDbContext<ApiDatabase>(options => options.UseSqlServer(Configuration.GetConnectionString("ApiDatabaseConnection")));
 
@@ -79,16 +115,17 @@ namespace WebApi
         {
             //if (env.IsDevelopment())
             //{
-            //    //app.UseDeveloperExceptionPage();
+            //    app.UseDeveloperExceptionPage();
             //}
 
-            //app.UseStatusCodePagesWithReExecute("/api/error");
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Exampl API v1");
+            });
 
-            //app.UseExceptionHandler("/api/error");
-            //app.UseHsts();
-
-            app.UseExceptionHandler(appBuilder);
-
+            app.Use(ExceptionHandler.ReqBodyRewind());
+            app.UseExceptionHandler(ExceptionHandler.WebApiExceptionHandler);
 
             app.UseRouting();
 
@@ -98,33 +135,6 @@ namespace WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
-        }
-
-        private void appBuilder(IApplicationBuilder applicationBuilder)
-        {
-            applicationBuilder.Run(async context =>
-            {
-                context.Response.StatusCode = 500;
-                context.Response.ContentType = "text/html";
-
-                await context.Response.WriteAsync("<html lang=\"en\"><body>\r\n");
-                await context.Response.WriteAsync("ERROR!<br><br>\r\n");
-
-                var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
-
-                // Use exceptionHandlerPathFeature to process the exception (for example, 
-                // logging), but do NOT expose sensitive error information directly to 
-                // the client.
-
-                if (exceptionHandlerPathFeature?.Error is FileNotFoundException)
-                {
-                    await context.Response.WriteAsync("File error thrown!<br><br>\r\n");
-                }
-
-                await context.Response.WriteAsync("<a href=\"/\">Home</a><br>\r\n");
-                await context.Response.WriteAsync("</body></html>\r\n");
-                await context.Response.WriteAsync(new string(' ', 512)); // IE padding
             });
         }
     }

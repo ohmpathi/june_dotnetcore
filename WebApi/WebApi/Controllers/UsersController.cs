@@ -24,6 +24,21 @@ namespace WebApi.Controllers
             this.database = database;
         }
 
+        /// <summary>
+        /// To authenticate users
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /Users
+        ///     {
+        ///        "username": "admin@webapi",
+        ///        "password": "admin_password"
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="200">Authentication details</response>
+        /// <response code="401">Unauthorized</response>
         [HttpPost]
         public IActionResult Post(AuthenticationInput input)
         {
@@ -34,7 +49,6 @@ namespace WebApi.Controllers
             }
             return Ok(result);
         }
-
 
         [Route("createuser")]
         [Authorize(Roles = "Admin")]
@@ -60,6 +74,7 @@ namespace WebApi.Controllers
             return Ok();
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [Route("cityinfo")]
         [Authorize(Policy = "CityAccess")]
         [HttpGet]

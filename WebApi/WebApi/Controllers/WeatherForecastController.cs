@@ -35,7 +35,7 @@ namespace WebApi.Controllers
             var sortedList = new SlectionSort().Sort(list);
             return Ok(new
             {
-                randon = list,
+                random = list,
                 sorted = sortedList
             });
         }
@@ -44,9 +44,9 @@ namespace WebApi.Controllers
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
-            int x = 6;
-            int y = 0;
-            int z = x / y;
+            //int x = 6;
+            //int y = 0;
+            //int z = x / y;
 
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast

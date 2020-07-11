@@ -16,7 +16,7 @@ namespace Demo1.BasicAuthentication
             this.dbContext = dbContext;
         }
 
-        public bool IsAutnenticated(string username, string password)
+        public bool IsAuthenticated(string username, string password)
         {
             var user = dbContext.Users.Find(username);
             if (user != null)

@@ -43,7 +43,7 @@ namespace Demo1.BasicAuthentication
         {
             UserService userService = context.HttpContext.RequestServices.GetService(typeof(UserService)) as UserService;
 
-            return userService.IsAutnenticated(username, password);
+            return userService.IsAuthenticated(username, password);
         }
 
         private string decode(string base64)
