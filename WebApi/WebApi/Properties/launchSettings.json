@@ -20,7 +20,8 @@
     "WebApi": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast?hello=world",
+      "launchUrlX": "weatherforecast?hello=world",
+      "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
